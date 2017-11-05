@@ -18,11 +18,8 @@ function abrirVentanaPrincipal ()
   botonCoeficientes = uicontrol (entornoPrincipal,"string","Aproximar", ...
                  "position",[125,280,300,100],"callback",{@abrirVentanaAproximar}, ...
                  "backgroundcolor",[.8,.8,.8]);
-  botonPCG = uicontrol (entornoPrincipal,"string","Comparar Aproximaciones", ...
-                 "position",[125,150,300,100],"callback",{@abrirVentanaComAprox}, ...
-                 "backgroundcolor",[.8,.8,.8]);
   botonFinalizar = uicontrol (entornoPrincipal,"string","Finalizar", ...
-                 "position",[125,20,300,100],"callback",{@abrirVentanaComAprox}, ...
+                 "position",[125,150,300,100],"callback",{@cerrarVentana}, ...
                  "backgroundcolor",[.8,.8,.8]);
 endfunction
 
@@ -108,7 +105,9 @@ function seleccionMetodos (ejeX,ejeY,cantDecimales)
                "position",[150,150,250,30],"callback",...
                {@opcionesAproximacion,ejeX,ejeY,cantDecimales,5}, ...
                "backgroundcolor",[.8,.8,.8]);
-  
+  botonPCG = uicontrol (entornoPrincipal,"string","Comparar Aproximaciones", ...
+                 "position",[150,100,250,30],"callback",{@abrirVentanaComAprox}, ...
+                 "backgroundcolor",[.8,.8,.8]);
 endfunction
 
 
@@ -235,8 +234,9 @@ endfunction
 ######                                                   
 ###   DETALLE CALCULO RECTA   #####                      
 ##### 
-
-
+function detalleCalculoRecta(ejeX,ejeY,cantDecimales)
+  
+endfunction
 ######                                                   
 ###   DETALLE CALCULO PARABOLA   #####                      
 ##### 
@@ -318,10 +318,12 @@ endfunction
 ###################################################################################
 #                          COMPARAR APROXIMACIONES                                #
 ###################################################################################
-
+function abrirVentanaComAprox()
+  endfunction
 ###################################################################################
 #                                   FINALIZAR                                     #
 ###################################################################################
-
+function cerrarVentana()
+  endfunction
 
 abrirVentanaPrincipal();
