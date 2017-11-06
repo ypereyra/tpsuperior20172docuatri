@@ -6,13 +6,13 @@ pkg load signal;
 #####
 function abrirVentanaPrincipal ()
   ventanaPrincipal = figure;
-  set (ventanaPrincipal,"name","AMIC - Aproximacion por M韓imos Cuadrados");
+  set (ventanaPrincipal,"name","AMIC - Aproximacion por M铆nimos Cuadrados");
   set (ventanaPrincipal,"numbertitle","off");
   set (ventanaPrincipal,"color",[.5,.5,.5]);
   set (ventanaPrincipal,"menubar","none"); #barra de menu principal y herramientas desaparecen
 
   entornoPrincipal = uibuttongroup (ventanaPrincipal, "position", [ 0 0 1 1], ...
-                 "title","Elija una opci髇", ...
+                 "title","Elija una opci贸n", ...
                  "titleposition","centertop","fontsize",11,"fontname","Arial");
              
   botonCoeficientes = uicontrol (entornoPrincipal,"string","Aproximar", ...
@@ -38,32 +38,22 @@ function abrirVentanaAproximar (handlesource,event)
   set (ventanaAproximar,"numbertitle","off");
   
   entornoAproximar = uibuttongroup (ventanaAproximar, "position", [ 0 0 1 1], ...
-               "title","Establezca los puntos y elija su aproximacion","titleposition","centertop");
+               "title","Establezca los puntos y elija su aproximacion\n en forma de una matriz de n*2 siendo n\nlacantidad de puntos y cada fila un punto",...
+               "titleposition","centertop");
                
-  textoEjeX = uicontrol (entornoAproximar,"style","text", ...
-               "string","eje x:","position",[100,350,300,40], ... 
+  textoPuntos = uicontrol (entornoAproximar,"style","text", ...
+               "string","Escriba los puntos ","position",[100,300,300,40], ... 
                "fontsize",16);
-  ejeX = uicontrol (entornoAproximar, "style", "edit", ...
-               "string", "2,7,4", "position",[120,310,290,40], ...
-               "fontsize",14,"backgroundcolor",[.5,.5,.5]);              
+  puntos = uicontrol (entornoAproximar, "style", "edit", ...
+    "string", "1.2,1.06;2.1,2.14;2.8,3.23;3.1,3.8;3.5,4.7;4.1,6.3;4.4,7.33;4.9,9.48;5.6,16.56;6.2,20.23;6.5,25.45",...
+    "position",[10,250,500,40], ...
+     "fontsize",14,"backgroundcolor",[.5,.5,.5]);              
                
-  textoEjeY = uicontrol (entornoAproximar,"style","text", ...
-               "string","Eje y :","position",[100,250,300,40], ... 
-               "fontsize",16);  
-  ejeY = uicontrol (entornoAproximar, "style", "edit", ...
-               "string", "6,1,9,3", "position",[120,210,290,40], ...
-               "fontsize",14,"backgroundcolor",[.5,.5,.5]);
-  
-  textoCantDecimales = uicontrol (entornoAproximar,"style","text", ...
-               "string","Cantidad decimales:","position",[100,150,300,40], ... 
-               "fontsize",16);  
-  cantDecimales = uicontrol (entornoAproximar, "style", "edit", ...
-               "string", "6,1,9,3", "position",[120,110,290,40], ...
-               "fontsize",14,"backgroundcolor",[.5,.5,.5]);
+   
                
   botonSeleccionarMetodo = uicontrol (entornoAproximar,"string","Continuar", ...
                "position",[150,50,200,40],"callback",...
-                {@seleccionMetodos,ejeX,ejeY,cantDecimales}, ...             
+                {@seleccionMetodos,puntos}, ...             
                "backgroundcolor",[.8,.8,.8]);
   
 endfunction
@@ -72,70 +62,68 @@ endfunction
 ######                                                   
 ###   SELECCION METODOS   #####                      
 #####  
-function seleccionMetodos (ejeX,ejeY,cantDecimales)
+function seleccionMetodos (handlesource,event,puntos)
   ventanaSeleccionMetodos = figure;
   set (ventanaSeleccionMetodos,"name","Aproximacion por minimos cuadrados");
   set (ventanaSeleccionMetodos,"numbertitle","off");
   
   entornoSeleccionMetodos = uibuttongroup (ventanaSeleccionMetodos, "position", [ 0 0 1 1], ...
-               "title","Elija el m閠odo de aproximaci髇","titleposition","centertop");
+               "title","Elija el m茅todo de aproximaci贸n","titleposition","centertop");
                
                
-  botonRecta = uicontrol (entornoSeleccionMetodos,"string"," Recta de m韓imos cuadrados", ...
+  botonRecta = uicontrol (entornoSeleccionMetodos,"string"," Recta de m铆nimos cuadrados", ...
                "position",[150,350,250,30],"callback",...
-                {@opcionesAproximacion,ejeX,ejeY,cantDecimales,1}, ...             
+                {@opcionesAproximacion,puntos,1}, ...             
                "backgroundcolor",[.8,.8,.8]);
            
-  botonParabola = uicontrol (entornoSeleccionMetodos,"string","Par醔ola de m韓imos cuadrados", ...
+  botonParabola = uicontrol (entornoSeleccionMetodos,"string","Par谩bola de m铆nimos cuadrados", ...
                "position",[150,300,250,30],"callback",...
-               {@opcionesAproximacion,ejeX,ejeY,cantDecimales,2}, ...
+               {@opcionesAproximacion,puntos,2}, ...
                "backgroundcolor",[.8,.8,.8]);
 
-  botonExponencial = uicontrol (entornoSeleccionMetodos,"string","Aproximaci髇 Exponencial", ...
+  botonExponencial = uicontrol (entornoSeleccionMetodos,"string","Aproximaci贸n Exponencial", ...
                "position",[150,250,250,30],"callback",...
-               {@opcionesAproximacion,ejeX,ejeY,cantDecimales,3}, ...
+               {@opcionesAproximacion,puntos,3}, ...
                "backgroundcolor",[.8,.8,.8]);
                
-  botonPotencial = uicontrol (entornoSeleccionMetodos,"string","Aproximaci髇 Potencial", ...
+  botonPotencial = uicontrol (entornoSeleccionMetodos,"string","Aproximaci贸n Potencial", ...
                "position",[150,200,250,30],"callback",...
-               {@opcionesAproximacion,ejeX,ejeY,cantDecimales,4}, ...
+               {@opcionesAproximacion,puntos,4}, ...
                "backgroundcolor",[.8,.8,.8]);
                
-  botonHiperbola = uicontrol (entornoSeleccionMetodos,"string","Aproximaci髇 Hip閞bola", ...
+  botonHiperbola = uicontrol (entornoSeleccionMetodos,"string","Aproximaci贸n Hip茅rbola", ...
                "position",[150,150,250,30],"callback",...
-               {@opcionesAproximacion,ejeX,ejeY,cantDecimales,5}, ...
+               {@opcionesAproximacion,puntos,5}, ...
                "backgroundcolor",[.8,.8,.8]);
-  botonPCG = uicontrol (entornoPrincipal,"string","Comparar Aproximaciones", ...
-                 "position",[150,100,250,30],"callback",{@abrirVentanaComAprox}, ...
-                 "backgroundcolor",[.8,.8,.8]);
+  
 endfunction
 
 
 ######                                                   
 ###   OPCIONES APROXIMACION   #####                      
 ##### 
-function opcionesAproximacion (ejeX,ejeY,cantDecimales,metodo)
+function opcionesAproximacion (handlesource,event,puntos,metodo)
   ventanaOpcionesAproximacion = figure;
   set (ventanaOpcionesAproximacion,"name","Aproximacion por minimos cuadrados");
   set (ventanaOpcionesAproximacion,"numbertitle","off");
   
   entornoOpcionesAproximacion = uibuttongroup (ventanaOpcionesAproximacion, "position", [ 0 0 1 1], ...
-               "title","Seleccione la opci髇 que desea realizar","titleposition","centertop");
+               "title","Seleccione la opci贸n que desea realizar","titleposition","centertop");
                
 
-  botonFuncion = uicontrol (entornoOpcionesAproximacion,"string","Mostrar funci髇 aproximante", ...
+  botonFuncion = uicontrol (entornoOpcionesAproximacion,"string","Mostrar funci贸n aproximante", ...
                "position",[150,250,250,30],"callback",...
-               {@funcionAproximante,ejeX,ejeY,cantDecimales,metodo}, ...
+               {@funcionAproximante,puntos,metodo}, ...
                "backgroundcolor",[.8,.8,.8]);
                
-  botonCalculo = uicontrol (entornoOpcionesAproximacion,"string","Obtener detalle del c醠culo", ...
+  botonCalculo = uicontrol (entornoOpcionesAproximacion,"string","Obtener detalle del c谩lculo", ...
                "position",[150,200,250,30],"callback",...
-               {@opcionesAproximacion,ejeX,ejeY,cantDecimales,3}, ...
+               {@opcionesAproximacion,puntos,3}, ...
                "backgroundcolor",[.8,.8,.8]);
                
-  botonGrafico = uicontrol (entornoOpcionesAproximacion,"string","Gr醘ico funci髇 y puntos", ...
+  botonGrafico = uicontrol (entornoOpcionesAproximacion,"string","Gr谩fico funci贸n y puntos", ...
                "position",[150,150,250,30],"callback",...
-               {@opcionesAproximacion,ejeX,ejeY,cantDecimales,3}, ...
+               {@grafico,puntos,metodo}, ...
                "backgroundcolor",[.8,.8,.8]);
   
 endfunction
@@ -145,26 +133,26 @@ endfunction
 #                            FUNCION APROXIMANTE                                  #
 ###################################################################################
 
-function funcionAproximante (ejeX,ejeY,cantDecimales,metodo)
-  ventanaFuncionAproximante = figure;
-  set (ventanaFuncionAproximante,"name","Aproximacion por minimos cuadrados");
-  set (ventanaFuncionAproximante,"numbertitle","off");
+function funcionAproximante (handlesource,event,puntos,metodo)
+  #ventanaFuncionAproximante = figure;
+  #set (ventanaFuncionAproximante,"name","Aproximacion por minimos cuadrados");
+  #set (ventanaFuncionAproximante,"numbertitle","off");
   
   if (metodo == 1) #Recta
-    funcionAproximanteVal = funcionAproxRecta(ejeX,ejeY,cantDecimales)
+    funcionAproximanteVal = funcionAproxRecta(puntos)
   elseif (metodo == 2) #Parabola
-    funcionAproximanteVal = funcionAproxParabola(ejeX,ejeY,cantDecimales)
+    funcionAproximanteVal = funcionAproxParabola(puntos)
   elseif (metodo == 3) #Exponencial
-    funcionAproximanteVal = funcionAproxExponencial(ejeX,ejeY,cantDecimales)
+    funcionAproximanteVal = funcionAproxExponencial(puntos)
   elseif (metodo == 4) #Potencial
-    funcionAproximanteVal = funcionAproxPotencial(ejeX,ejeY,cantDecimales)
+    funcionAproximanteVal = funcionAproxPotencial(puntos)
   elseif (metodo == 5) #Hiperbola
-    funcionAproximanteVal = funcionAproxHiperbola(ejeX,ejeY,cantDecimales)
+    funcionAproximanteVal = funcionAproxHiperbola(puntos)
   endif
  
   
   entornoFuncionAproximante = uibuttongroup (ventanaFuncionAproximante, "position", [ 0 0 1 1], ...
-               "title","Funci髇 Aproximante","titleposition","centertop");
+               "title","Funci贸n Aproximante","titleposition","centertop");
                
 
   funcionAprox = uicontrol (entornoFuncionAproximante,"style","text", ...
@@ -174,7 +162,35 @@ function funcionAproximante (ejeX,ejeY,cantDecimales,metodo)
 endfunction
 
 ######                                                   
-###   FUNCION APROXIMACION RECTA   #####                      
+###   FUNCION APROXIMACION RECTA   ##### 
+function x = recta(puntos)
+  # sea ax+b en el vector se guarda a,b
+   matri=str2num(puntos);
+   cantidadPuntos = length(matri);
+   sumX=sum(matri(:,1));
+   sumY=sum(matri(:,2));
+   sumXY=0;
+   sumX2=0;  #sumatoria de x^2
+    for i=1:cantidadPuntos
+       sumXY = sumXY + matri(i,1)*matri(i,2);
+       sumX2=sumX2 + matri(i,1)^2 ;
+         endfor
+   A= [sumX2,sumX;sumX,cantidadPuntos];
+   b=[sumXY;sumY];
+   Ai=inv(A);
+   x=Ai*b;
+   
+endfunction
+function funcionAproxRecta(puntos) 
+   h=recta(get (puntos,"string"));
+ 
+   
+   helpdlg (strcat("y=",num2str(h(1)),"x +",num2str(h(2))),"recta minimo cuadrado");
+   
+   
+   endfunction
+
+                     
 ##### 
 
 
@@ -202,26 +218,26 @@ endfunction
 #                              DETALLE CALCULO                                    #
 ###################################################################################   
 
-function detalleCalculo (ejeX,ejeY,cantDecimales,metodo)
+function detalleCalculo (handlesource,event,puntos,metodo) 
   ventanaDetalleCalculo = figure;
   set (ventanaDetalleCalculo,"name","Aproximacion por minimos cuadrados");
   set (ventanaDetalleCalculo,"numbertitle","off");
   
   if (metodo == 1) #Recta
-    detalleCalculoVal = detalleCalculoRecta(ejeX,ejeY,cantDecimales)
+    detalleCalculoVal = detalleCalculoRecta(puntos)
   elseif (metodo == 2) #Parabola
-    detalleCalculoVal = detalleCalculoParabola(ejeX,ejeY,cantDecimales)
+    detalleCalculoVal = detalleCalculoParabola(puntos)
   elseif (metodo == 3) #Exponencial
-    detalleCalculoVal = detalleCalculoExponencial(ejeX,ejeY,cantDecimales)
+    detalleCalculoVal = detalleCalculoExponencial(puntos)
   elseif (metodo == 4) #Potencial
-    detalleCalculoVal = detalleCalculoPotencial(ejeX,ejeY,cantDecimales)
+    detalleCalculoVal = detalleCalculoPotencial(puntos)
   elseif (metodo == 5) #Hiperbola
-    detalleCalculoVal = detalleCalculoHiperbola(ejeX,ejeY,cantDecimales)
+    detalleCalculoVal = detalleCalculoHiperbola(puntos)
   endif
  
   
   entornoDetalleCalculo = uibuttongroup (ventanaDetalleCalculo, "position", [ 0 0 1 1], ...
-               "title","Detalle c醠culo","titleposition","centertop");
+               "title","Detalle c谩lculo","titleposition","centertop");
                
 
   detalleCalc = uicontrol (entornoDetalleCalculo,"style","text", ...
@@ -229,14 +245,13 @@ function detalleCalculo (ejeX,ejeY,cantDecimales,metodo)
                "fontsize",16);
   
 endfunction
+#matri(1,1) es el numero de la 1era fila y 1era columna
 
 
 ######                                                   
 ###   DETALLE CALCULO RECTA   #####                      
 ##### 
-function detalleCalculoRecta(ejeX,ejeY,cantDecimales)
-  
-endfunction
+
 ######                                                   
 ###   DETALLE CALCULO PARABOLA   #####                      
 ##### 
@@ -260,21 +275,21 @@ endfunction
 #                                  GRAFICO                                        #
 ################################################################################### 
   
-function grafico (ejeX,ejeY,cantDecimales,metodo)
-  ventanaGrafico = figure;
-  set (ventanaGrafico,"name","Aproximacion por minimos cuadrados");
-  set (ventanaGrafico,"numbertitle","off");
+function grafico (handlesource,event,puntos,metodo)
+  #ventanaGrafico = figure;
+  #set (ventanaGrafico,"name","Aproximacion por minimos cuadrados");
+  #set (ventanaGrafico,"numbertitle","off");
   
   if (metodo == 1) #Recta
-    grafico = graficoRecta(ejeX,ejeY,cantDecimales)
+    grafico = graficoRecta(puntos)
   elseif (metodo == 2) #Parabola
-    grafico = graficoParabola(ejeX,ejeY,cantDecimales)
+    grafico = graficoParabola(puntos)
   elseif (metodo == 3) #Exponencial
-    grafico = graficoExponencial(ejeX,ejeY,cantDecimales)
+    grafico = graficoExponencial(puntos)
   elseif (metodo == 4) #Potencial
-    grafico = graficoPotencial(ejeX,ejeY,cantDecimales)
+    grafico = graficoPotencial(puntos)
   elseif (metodo == 5) #Hiperbola
-    grafico = graficoHiperbola(ejeX,ejeY,cantDecimales)
+    grafico = graficoHiperbola(puntos)
   endif
  
   
@@ -290,7 +305,21 @@ endfunction
 
 
 ######                                                   
-###   GRAFICO RECTA   #####                      
+###   GRAFICO RECTA   #####
+
+function graficoRecta(puntos) 
+   h=recta(get (puntos,"string"));
+   grafi =figure
+  set (grafi,"name","Grafico de la recta");
+ set (grafi,"numbertitle","off");
+   x=[1:0.1:7];
+   y=h(1)*x + h(2);
+   plot(x,y)
+   
+   endfunction
+
+
+                      
 ##### 
 
 
@@ -327,3 +356,5 @@ function cerrarVentana()
   endfunction
 
 abrirVentanaPrincipal();
+
+             
