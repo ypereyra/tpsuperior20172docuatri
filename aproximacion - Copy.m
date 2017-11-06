@@ -45,7 +45,7 @@ function abrirVentanaAproximar (handlesource,event)
                "string","Escriba los puntos ","position",[100,300,300,40], ... 
                "fontsize",16);
   puntos = uicontrol (entornoAproximar, "style", "edit", ...
-    "string", "1.2,1.06;2.1,2.14;2.8,3.23;3.1,3.8;3.5,4.7;4.1,6.3;4.4,7.33;4.9,9.48;5.6,16.56;6.2,20.23;6.5,25.45",...
+    "string", "1.2,1.06;2.1,2.14;2.8,3.23;3.1,3.8;3.5,4.7;4.1,6.3;4.4,7.33;4.9,9.48;5.6,13.98;5.9,16.56;6.2,20.23;6.5,25.45",...
     "position",[10,250,500,40], ...
      "fontsize",14,"backgroundcolor",[.5,.5,.5]);              
                
@@ -118,7 +118,7 @@ function opcionesAproximacion (handlesource,event,puntos,metodo)
                
   botonCalculo = uicontrol (entornoOpcionesAproximacion,"string","Obtener detalle del cálculo", ...
                "position",[150,200,250,30],"callback",...
-               {@opcionesAproximacion,puntos,3}, ...
+               {@detalleCalculo,puntos,metodo}, ...
                "backgroundcolor",[.8,.8,.8]);
                
   botonGrafico = uicontrol (entornoOpcionesAproximacion,"string","Gráfico función y puntos", ...
@@ -219,9 +219,9 @@ function funcionAproxRecta(puntos)
 ###################################################################################   
 
 function detalleCalculo (handlesource,event,puntos,metodo) 
-  ventanaDetalleCalculo = figure;
-  set (ventanaDetalleCalculo,"name","Aproximacion por minimos cuadrados");
-  set (ventanaDetalleCalculo,"numbertitle","off");
+ # ventanaDetalleCalculo = figure;
+ # set (ventanaDetalleCalculo,"name","Aproximacion por minimos cuadrados");
+ # set (ventanaDetalleCalculo,"numbertitle","off");
   
   if (metodo == 1) #Recta
     detalleCalculoVal = detalleCalculoRecta(puntos)
@@ -249,7 +249,33 @@ endfunction
 
 
 ######                                                   
-###   DETALLE CALCULO RECTA   #####                      
+###   DETALLE CALCULO RECTA   #####                
+function detalleCalculoRecta(puntos)
+  h= get (puntos,"string");
+  matri=str2num(h);
+  cantidadPuntos = length(matri);
+  str= "\ni \t\t xi \t\t yi\t\t xi^2\t\t xi.yi\n";
+  for i=1 :cantidadPuntos
+      str =strcat(str,num2str(i),"\t\t",num2str(matri(i,1)),"\t\t",num2str(matri(i,2)),"\t\t",num2str(matri(i,1)^2),"\t\t",num2str(matri(i,1)*matri(i,2))," \n");
+    endfor
+   sumX =sum(matri(:,1));
+   sumY =sum(matri(:,2));
+   sumXY=0;
+   sumX2=0;  #sumatoria de x^2
+    for i=1:cantidadPuntos
+       sumXY = sumXY + matri(i,1)*matri(i,2);
+       sumX2=sumX2 + matri(i,1)^2 ;
+       endfor 
+       
+    str=strcat(str,"\t\t",num2str(sumX),"\t\t",num2str(sumY),"\t\t",num2str(sumX2),"\t\t",num2str(sumXY),"\n\n");
+   h=recta(get (puntos,"string")); #S
+   str=strcat(str,"El sistema planteado es\n\n",...
+         "a *",num2str(sumX2),"\t","+","\t","b *",num2str(sumX),"\t","=","\t",num2str(sumXY),"\n\n",...
+         "a *",num2str(sumX),"\t\t","+","\t","b *",num2str(cantidadPuntos),"\t","=","\t",num2str(sumY),"\n\n",...
+         "resolviendo el sistema queda\n\n","a =",num2str(h(1)),"\n","b =",num2str(h(2)),"\n",...
+         num2str(h(1)),"X + ",num2str(h(2)),"\n");
+   helpdlg (evalc ("str"),"detalle del calculo");
+endfunction      
 ##### 
 
 ######                                                   
